@@ -104,7 +104,5 @@ projeto/
 
 ## Integrantes do grupo
 
-- Nome Completo — Matrícula
-- Nome Completo — Matrícula
-- Nome Completo — Matrícula
-- Nome Completo — Matrícula
+- Fabrício Quintilhiano Braga
+- Ricardo França Corrêa Maia
