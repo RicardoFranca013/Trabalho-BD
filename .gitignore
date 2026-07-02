@@ -1,0 +1,37 @@
+# Credenciais e ambiente
+.env
+*.env
+
+# Wallet Oracle (certificados sensíveis)
+Wallet_*/
+*.p12
+*.sso
+*.jks
+cwallet*
+ewallet*
+tnsnames.ora
+sqlnet.ora
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs PHP
+*.log
+/logs/
+
+# Dependências (caso use no futuro)
+/vendor/
+node_modules/
+
+# IDEs e editores
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# Arquivos temporários
+/tmp/
+*.tmp
+*.bak

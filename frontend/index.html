@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Acadêmico - TP BD I</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="toast-container"></div>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">P</div>
+                <div class="logo-text">
+                    <h2>Portal CEFET</h2>
+                    <p>Controle de Matrículas</p>
+                </div>
+            </div>
+            <nav>
+                <ul id="nav-menu">
+                    <li><a href="#" data-target="sec-alunos" class="active">Alunos</a></li>
+                    <li><a href="#" data-target="sec-turmas">Turmas</a></li>
+                    <li><a href="#" data-target="sec-professores">Professores</a></li>
+                    <li><a href="#" data-target="sec-cursos">Cursos</a></li>
+                    <li><a href="#" data-target="sec-departamentos">Departamentos</a></li>
+                    <li><a href="#" data-target="sec-disciplinas">Disciplinas</a></li>
+                    <li><a href="#" data-target="sec-matriculas">Matrículas</a></li>
+                    <li><a href="#" data-target="sec-relatorios" class="nav-relatorios">Relatórios <span class="badge">TP</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+
+            <section id="sec-alunos" class="view-section active">
+                <header>
+                    <h1>Módulo de Alunos</h1>
+                    <p>Inclusão, Alteração e Remoção </p>
+                </header>
+
+                <div class="card">
+                    <h3 id="form-title">Cadastrar Novo Aluno</h3>
+                    <form id="form-aluno" class="grid-form">
+                        <input type="hidden" id="aluno-acao" value="insert">
+
+                        <div class="form-group">
+                            <label for="matricula">Matrícula (PK)</label>
+                            <input type="number" id="matricula" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nome">Nome Completo</label>
+                            <input type="text" id="nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="aluno-categoria">Categoria</label>
+                            <input type="text" id="aluno-categoria" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="aluno-data-nascimento">Data de Nascimento</label>
+                            <input type="date" id="aluno-data-nascimento" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nivel">Nível</label>
+                            <select id="nivel" required>
+                                <option value="Graduação">Graduação</option>
+                                <option value="Mestrado">Mestrado</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="aluno-sexo">Sexo</label>
+                            <select id="aluno-sexo" required>
+                                <option value="M">Masculino</option>
+                                <option value="F">Feminino</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="aluno-cod-curso">Curso</label>
+                            <select id="aluno-cod-curso" required>
+                                <option value="">Carregando...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="aluno-status">Status</label>
+                            <select id="aluno-status" required>
+                                <option value="ATIVO">Ativo</option>
+                                <option value="TRANCADO">Trancado</option>
+                                <option value="FORMADO">Formado</option>
+                                <option value="INATIVO">Inativo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="aluno-rendimento">Rendimento</label>
+                            <input type="number" step="0.01" id="aluno-rendimento">
+                        </div>
+                        <div class="form-group">
+                            <label for="aluno-logradouro">Logradouro</label>
+                            <input type="text" id="aluno-logradouro" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="aluno-numero">Número</label>
+                            <input type="text" id="aluno-numero" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="aluno-bairro">Bairro</label>
+                            <input type="text" id="aluno-bairro" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="aluno-cep">CEP</label>
+                            <input type="text" id="aluno-cep" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="aluno-cidade">Cidade</label>
+                            <input type="text" id="aluno-cidade" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="aluno-estado">Estado</label>
+                            <input type="text" id="aluno-estado" required>
+                        </div>
+
+                        <div class="form-actions form-full-width">
+                            <button type="submit" class="btn-primary">Salvar Registro</button>
+                            <button type="button" id="btn-cancelar" class="btn-secondary hidden">Cancelar Edição</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card mt-20">
+                    <h3>Registros Atuais</h3>
+                    <div class="table-responsive">
+                        <table class="data-table" id="tabela-alunos">
+                            <thead>
+                                <tr>
+                                    <th>Matrícula</th>
+                                    <th>Nome</th>
+                                    <th>Nascimento</th>
+                                    <th>Nível</th>
+                                    <th>Sexo</th>
+                                    <th>Curso</th>
+                                    <th>Status</th>
+                                    <th>Rendimento</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-relatorios" class="view-section hidden">
+                <header>
+                    <h1>Relatórios Gerenciais</h1>
+                    <p>Consultas complexas exigidas no TP </p>
+                </header>
+
+                <div class="card grid-reports">
+                    <button class="btn-report" onclick="carregarRelatorio('inner-join', this)">1. Junção Interna (Inner Join)</button>
+                    <button class="btn-report" onclick="carregarRelatorio('outer-join', this)">2. Junção Externa (Outer Join)</button>
+                    <button class="btn-report" onclick="carregarRelatorio('group-by', this)">3. Agrupamento (Group By)</button>
+                    <button class="btn-report" onclick="carregarRelatorio('having', this)">4. Filtro de Grupo (Having)</button>
+                    <button class="btn-report" onclick="carregarRelatorio('subquery', this)">5. Consultas Aninhadas</button>
+                </div>
+
+                <div class="card mt-20" id="area-resultado-relatorio">
+                    <h3>Resultado da Consulta</h3>
+                    <div class="table-responsive">
+                        <table class="data-table" id="tabela-relatorio">
+                            <thead>
+                                <tr id="relatorio-header"></tr>
+                            </thead>
+                            <tbody id="relatorio-body">
+                                <tr><td>Selecione um relatório acima para visualizar os dados.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-turmas" class="view-section hidden">
+                <header>
+                    <h1>Módulo de Turmas</h1>
+                    <p>Inclusão, Alteração e Remoção</p>
+                </header>
+
+                <div class="card">
+                    <h3 id="form-title-turma">Cadastrar Nova Turma</h3>
+                    <form id="form-turma" class="grid-form">
+                        <input type="hidden" id="turma-acao" value="insert">
+
+                        <div class="form-group">
+                            <label for="turma-semestre">Semestre (PK)</label>
+                            <select id="turma-semestre" required>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="turma-num">Número da Turma (PK)</label>
+                            <input type="number" id="turma-num" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="turma-ano">Ano (PK)</label>
+                            <input type="number" id="turma-ano" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="turma-disciplina">Disciplina (PK)</label>
+                            <select id="turma-disciplina" required>
+                                <option value="">Carregando...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="turma-sala">Sala</label>
+                            <input type="text" id="turma-sala" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="turma-vagas">Vagas</label>
+                            <input type="number" id="turma-vagas" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="turma-professor">Professor</label>
+                            <select id="turma-professor" required>
+                                <option value="">Carregando...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-actions form-full-width">
+                            <button type="submit" class="btn-primary">Salvar Registro</button>
+                            <button type="button" id="btn-cancelar-turma" class="btn-secondary hidden">Cancelar Edição</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card mt-20">
+                    <h3>Registros Atuais</h3>
+                    <div class="table-responsive">
+                        <table class="data-table" id="tabela-turmas">
+                            <thead>
+                                <tr>
+                                    <th>Semestre</th>
+                                    <th>Turma</th>
+                                    <th>Ano</th>
+                                    <th>Disciplina</th>
+                                    <th>Sala</th>
+                                    <th>Vagas</th>
+                                    <th>Professor</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-professores" class="view-section hidden">
+                <header>
+                    <h1>Corpo Docente</h1>
+                    <p>Inclusão, Alteração e Remoção</p>
+                </header>
+
+                <div class="card">
+                    <h3 id="form-title-professor">Cadastrar Novo Professor</h3>
+                    <form id="form-professor" class="grid-form">
+                        <input type="hidden" id="professor-acao" value="insert">
+
+                        <div class="form-group">
+                            <label for="professor-matricula">Matrícula (PK)</label>
+                            <input type="number" id="professor-matricula" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="professor-nome">Nome Completo</label>
+                            <input type="text" id="professor-nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="professor-titulo">Título</label>
+                            <input type="text" id="professor-titulo" required>
+                        </div>
+
+                        <div class="form-actions form-full-width">
+                            <button type="submit" class="btn-primary">Salvar Registro</button>
+                            <button type="button" id="btn-cancelar-professor" class="btn-secondary hidden">Cancelar Edição</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card mt-20">
+                    <h3>Registros Atuais</h3>
+                    <div class="table-responsive">
+                        <table class="data-table" id="tabela-professores">
+                            <thead>
+                                <tr>
+                                    <th>Matrícula</th>
+                                    <th>Nome</th>
+                                    <th>Título</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-cursos" class="view-section hidden">
+                <header>
+                    <h1>Módulo de Cursos</h1>
+                    <p>Inclusão, Alteração e Remoção</p>
+                </header>
+
+                <div class="card">
+                    <h3 id="form-title-curso">Cadastrar Novo Curso</h3>
+                    <form id="form-curso" class="grid-form">
+                        <input type="hidden" id="curso-acao" value="insert">
+
+                        <div class="form-group">
+                            <label for="curso-cod">Código do Curso (PK)</label>
+                            <input type="text" id="curso-cod" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="curso-nome">Nome</label>
+                            <input type="text" id="curso-nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="curso-carga">Carga Horária</label>
+                            <input type="number" id="curso-carga" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="curso-departamento">Departamento</label>
+                            <select id="curso-departamento" required>
+                                <option value="">Carregando...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="curso-coordenador">Coordenador</label>
+                            <select id="curso-coordenador" required>
+                                <option value="">Carregando...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-actions form-full-width">
+                            <button type="submit" class="btn-primary">Salvar Registro</button>
+                            <button type="button" id="btn-cancelar-curso" class="btn-secondary hidden">Cancelar Edição</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card mt-20">
+                    <h3>Registros Atuais</h3>
+                    <div class="table-responsive">
+                        <table class="data-table" id="tabela-cursos">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Nome</th>
+                                    <th>Carga Horária</th>
+                                    <th>Departamento</th>
+                                    <th>Coordenador</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-departamentos" class="view-section hidden">
+                <header>
+                    <h1>Módulo de Departamentos</h1>
+                    <p>Inclusão, Alteração e Remoção</p>
+                </header>
+
+                <div class="card">
+                    <h3 id="form-title-departamento">Cadastrar Novo Departamento</h3>
+                    <form id="form-departamento" class="grid-form">
+                        <input type="hidden" id="departamento-acao" value="insert">
+
+                        <div class="form-group">
+                            <label for="departamento-cod">Código do Departamento (PK)</label>
+                            <input type="text" id="departamento-cod" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="departamento-nome">Nome</label>
+                            <input type="text" id="departamento-nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="departamento-telefone">Telefone</label>
+                            <input type="text" id="departamento-telefone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="departamento-sala">Sala</label>
+                            <input type="text" id="departamento-sala" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="departamento-bloco">Bloco</label>
+                            <input type="text" id="departamento-bloco" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="departamento-campus">Campus</label>
+                            <input type="text" id="departamento-campus" required>
+                        </div>
+
+                        <div class="form-actions form-full-width">
+                            <button type="submit" class="btn-primary">Salvar Registro</button>
+                            <button type="button" id="btn-cancelar-departamento" class="btn-secondary hidden">Cancelar Edição</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card mt-20">
+                    <h3>Registros Atuais</h3>
+                    <div class="table-responsive">
+                        <table class="data-table" id="tabela-departamentos">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Nome</th>
+                                    <th>Telefone</th>
+                                    <th>Sala</th>
+                                    <th>Bloco</th>
+                                    <th>Campus</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-disciplinas" class="view-section hidden">
+                <header>
+                    <h1>Módulo de Disciplinas</h1>
+                    <p>Inclusão, Alteração e Remoção</p>
+                </header>
+
+                <div class="card">
+                    <h3 id="form-title-disciplina">Cadastrar Nova Disciplina</h3>
+                    <form id="form-disciplina" class="grid-form">
+                        <input type="hidden" id="disciplina-acao" value="insert">
+
+                        <div class="form-group">
+                            <label for="disciplina-cod">Código da Disciplina (PK)</label>
+                            <input type="text" id="disciplina-cod" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="disciplina-nome">Nome</label>
+                            <input type="text" id="disciplina-nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="disciplina-creditos">Créditos</label>
+                            <input type="number" id="disciplina-creditos" required>
+                        </div>
+
+                        <div class="form-actions form-full-width">
+                            <button type="submit" class="btn-primary">Salvar Registro</button>
+                            <button type="button" id="btn-cancelar-disciplina" class="btn-secondary hidden">Cancelar Edição</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card mt-20">
+                    <h3>Registros Atuais</h3>
+                    <div class="table-responsive">
+                        <table class="data-table" id="tabela-disciplinas">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Nome</th>
+                                    <th>Créditos</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-matriculas" class="view-section hidden">
+                <header>
+                    <h1>Módulo de Matrículas</h1>
+                    <p>Inclusão, Alteração e Remoção</p>
+                </header>
+
+                <div class="card">
+                    <h3 id="form-title-matricula">Cadastrar Nova Matrícula</h3>
+                    <form id="form-matricula" class="grid-form">
+                        <input type="hidden" id="matricula-acao" value="insert">
+
+                        <div class="form-group">
+                            <label for="matricula-aluno">Aluno (PK)</label>
+                            <select id="matricula-aluno" required>
+                                <option value="">Carregando...</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-full-width">
+                            <label for="matricula-turma-select">Turma (PK)</label>
+                            <select id="matricula-turma-select" required>
+                                <option value="">Carregando...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="matricula-nota">Nota</label>
+                            <input type="number" step="0.01" id="matricula-nota" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="matricula-frequencia">Frequência (%)</label>
+                            <input type="number" step="0.01" id="matricula-frequencia" required>
+                        </div>
+
+                        <div class="form-actions form-full-width">
+                            <button type="submit" class="btn-primary">Salvar Registro</button>
+                            <button type="button" id="btn-cancelar-matricula" class="btn-secondary hidden">Cancelar Edição</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card mt-20">
+                    <h3>Registros Atuais</h3>
+                    <div class="table-responsive">
+                        <table class="data-table" id="tabela-matriculas">
+                            <thead>
+                                <tr>
+                                    <th>Aluno</th>
+                                    <th>Semestre</th>
+                                    <th>Turma</th>
+                                    <th>Ano</th>
+                                    <th>Disciplina</th>
+                                    <th>Nota</th>
+                                    <th>Frequência</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
